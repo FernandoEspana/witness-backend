@@ -74,7 +74,7 @@ module.exports = {
           if(err){
             return res.status(400).json({ message: 'Link expirado o incorrecto'});
           }
-          email  = decodedToken.email;
+          email= decodedToken.email;
           role = decodedToken.role;
           name = decodedToken.name;
         })
@@ -100,6 +100,15 @@ module.exports = {
       }catch(error) {
         res.status(400).json({message: 'Algo salió mal!!'});
       } 
+  },
+  async update(req, res){
+    try {
+      const { body, params: { userId } } = req;
+      await Witness.findByIdAndUpdate(userId, body, { new: true});
+      res.status(200).json({ message: 'Perfil Actualizado' });
+    } catch (error) {
+      res.status(400).json({ message: 'Perfil no se pudo actulizar' });
+    }
   },
   async destroy(req,res) {
     try {

@@ -1,4 +1,5 @@
 const PollingStation = require('../models/pollingStation.model');
+const Witness = require('../models/witness.model');
 
 
 module.exports = {
@@ -13,5 +14,42 @@ module.exports = {
     } catch (error) {
       res.status(400).json({message: error});
     }
+  },
+  async list(req, res) {
+    try {
+      const stations = await PollingStation.find().populate('witnessIDs', '-password');
+      const witnesses = await Witness.find();
+      let totalTables = 0;
+      stations.forEach( (station) => {
+        totalTables += station.tablesNumber;
+      });
+      
+      res.status(200).json({ 
+        totalStations: stations.length,
+        totalWitneses: witnesses.length,
+        percentageCovered: ((witnesses.length / totalTables ) * 100).toFixed(2),
+        totalTables,
+        stations,
+      });
+    } catch (error) {
+      res.status(400).json({ message: 'Puestos de votacion no encontrados'});
+    }
+  },
+  async show(req, res) {
+    try {
+      const { stationId } = req.params;
+      
+      const pollingStation = await PollingStation
+        .findById(stationId)
+        .populate('witnessIDs', '-passwprd');
+      const{ witnessIDs, tablesNumber } = pollingStation;  
+      res.status(200).json({
+        percentageCovered: ((witnessIDs.length / tablesNumber) * 100).toFixed(2),
+        pollingStation
+      });
+    } catch (error) {
+      res.status(404).json({ message: 'No se pudo encontrar puesto de votación' });
+    }
   }
+
 }

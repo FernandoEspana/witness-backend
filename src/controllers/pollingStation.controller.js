@@ -23,12 +23,14 @@ module.exports = {
       stations.forEach( (station) => {
         totalTables += station.tablesNumber;
       });
+      const tablesLeft = totalTables - witnesses.length;
       
       res.status(200).json({ 
         totalStations: stations.length,
         totalWitneses: witnesses.length,
         percentageCovered: ((witnesses.length / totalTables ) * 100).toFixed(2),
         totalTables,
+        tablesLeft,
         stations,
       });
     } catch (error) {

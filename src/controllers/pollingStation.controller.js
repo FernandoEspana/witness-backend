@@ -47,6 +47,7 @@ module.exports = {
       const{ witnessIDs, tablesNumber } = pollingStation;  
       res.status(200).json({
         percentageCovered: ((witnessIDs.length / tablesNumber) * 100).toFixed(2),
+        tablesLeft: (tablesNumber - witnessIDs.length),
         pollingStation
       });
     } catch (error) {

@@ -38,6 +38,7 @@ module.exports = {
       process.env.SECRET,
       { expiresIn: '24h'}
     );
+    console.log(token);
     const data = {
       from: 'noreply@test.co',
       to: email,

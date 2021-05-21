@@ -71,14 +71,19 @@ module.exports = {
       let role;
       let name;
       if(token) {
-        jwt.verify(token, process.env.SECRET, function(err, decodedToken) {
-          if(err){
-            return res.status(400).json({ message: 'Link expirado o incorrecto'});
-          }
-          email= decodedToken.email;
-          role = decodedToken.role;
-          name = decodedToken.name;
-        })
+        try {
+          jwt.verify(token, process.env.SECRET, function(err, decodedToken) {
+            if(err){
+              throw Error({ message: 'Link expirado o incorrecto'});
+            }
+            email= decodedToken.email;
+            role = decodedToken.role;
+            name = decodedToken.name;
+          })
+          
+        } catch (error) {
+          return res.status(400).json({ message: 'Link expirado o incorrecto'});
+        }
       }
       const exists = await Witness.findOne({ email });
       if( exists ) {

@@ -14,7 +14,7 @@ module.exports = {
       const witness = await Witness.findOne({email});
       const isValid = witness.password === password;
 
-      if(!witness || !isValid || witness.role ==! 'ADMIN_ROLE') {
+      if(!witness || !isValid || witness.role === 'WITNESS_ROLE') {
         throw Error('Usuario o contraseña invalida')
       }
 
@@ -80,7 +80,7 @@ module.exports = {
             role = decodedToken.role;
             name = decodedToken.name;
           })
-          
+          console.log(email, role, name);
         } catch (error) {
           return res.status(400).json({ message: 'Link expirado o incorrecto'});
         }
